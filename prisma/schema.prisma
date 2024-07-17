@@ -1,0 +1,158 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+  schemas  = ["dbo", "ganesha"]
+}
+
+model AFAMILY {
+  FAMILYID   String  @id(map: "PK__AFAMILY__FA44CEF15643D6F4") @db.VarChar(16)
+  FAMILYNAME String? @db.VarChar(100)
+  GROUPCODE  Int?
+
+  @@schema("ganesha")
+}
+
+model APASSENGER {
+  SERNO     Int
+  FAMILYID  String  @db.VarChar(16)
+  PASSNAME  String? @db.VarChar(50)
+  PASSAGE   Int?
+  PASSPHONE String? @db.VarChar(10)
+  PASSGEN   String? @db.VarChar(10)
+  TRAVEL    String? @db.VarChar(50)
+  GOVTID    String? @db.VarChar(50)
+
+  @@id([SERNO, FAMILYID], map: "PK__APASSENG__BAFE907A6872ED5A")
+  @@schema("ganesha")
+}
+
+model GFAMILY {
+  FAMILYID   String  @id(map: "PK__GFAMILY__FA44CEF134B028E7") @db.VarChar(16)
+  FAMILYNAME String? @db.VarChar(100)
+  GROUPCODE  Int?
+
+  @@schema("ganesha")
+}
+
+model GKHIWANDI {
+  HOTINUMBER Int     @id(map: "PK__GKHIWAND__C871936B99D84BB1")
+  FIRSTNAME  String? @db.VarChar(40)
+  MIDDLENAME String? @db.VarChar(40)
+  GOTHRA     String? @db.VarChar(25)
+  MOBILENO1  String? @db.VarChar(14)
+  MOBILENO2  String? @db.VarChar(14)
+  ADDRESS    String? @db.VarChar(200)
+  CITY       String? @db.VarChar(15)
+  OSWPOR     String? @db.VarChar(6)
+  EMAILID    String? @db.VarChar(50)
+
+  @@schema("ganesha")
+}
+
+model GMANAVUSALIST {
+  NAME          String  @id(map: "PK__GMANAVUS__D9C1FA012643B8DD") @db.VarChar(40)
+  RELATION      String? @db.VarChar(20)
+  PHONENO       String? @db.VarChar(14)
+  ALTNUMBER     String? @db.VarChar(12)
+  LOCATION      String? @db.VarChar(255)
+  EMAIL         String? @db.VarChar(50)
+  GOOGLEMAPLINK String? @db.VarChar(255)
+
+  @@schema("ganesha")
+}
+
+model GMANUAL {
+  TYPE           Int     @db.TinyInt
+  SER_NO         Int     @db.TinyInt
+  SUB_SER_NO     Int     @db.TinyInt
+  SUB_SUB_SER_NO Int     @db.TinyInt
+  TOPIC          String? @db.VarChar(255)
+  CONTENT        String? @db.VarChar(Max)
+
+  @@id([TYPE, SER_NO, SUB_SER_NO, SUB_SUB_SER_NO], map: "PK__GMANUAL__300E8AC396F57F29")
+  @@schema("ganesha")
+}
+
+model GPASSENGER {
+  SERNO       Int
+  FAMILYID    String   @db.VarChar(16)
+  PASSNAME    String?  @db.VarChar(50)
+  PASSAGE     Int?
+  PASSPHONE   String?  @db.VarChar(12)
+  PASSGEN     Boolean?
+  TRAVEL      String?  @db.VarChar(20)
+  GOVTID      String?  @db.VarChar(50)
+  TICKETCLASS String?  @db.VarChar(10)
+  BOOKEDBY    String?  @db.VarChar(10)
+  PNR         String?  @db.VarChar(10)
+  COACH       String?  @db.VarChar(3)
+  SEATNO      Int?     @db.TinyInt
+  BOOKEDBY2   String?  @db.VarChar(10)
+  PNR2        String?  @db.VarChar(10)
+  COACH2      String?  @db.VarChar(3)
+  SEATNO2     Int?     @db.TinyInt
+  PASSTITLE   String?  @db.VarChar(4)
+  ROOMNO      Int?
+  BUSNO       Int?
+  SUBSEATNO   String?  @db.VarChar(1)
+  SUBSEATNO2  String?  @db.VarChar(1)
+  REMARKS     String?  @db.VarChar(30)
+  CHOUVIAR    Boolean?
+
+  @@id([SERNO, FAMILYID], map: "PK__GPASSENG__BAFE907AABC5C8FE")
+  @@schema("ganesha")
+}
+
+model GPNR {
+  PNR         String  @id(map: "PK__GPNR__C5773DD21091C03F") @db.VarChar(10)
+  BOOKEDBY    String? @db.VarChar(10)
+  BOOKEDFROM  String? @db.VarChar(10)
+  BOOKEDTO    String? @db.VarChar(10)
+  TICKETIMAGE Bytes?
+
+  @@schema("ganesha")
+}
+
+model GRING {
+  GSTNAME     String   @id(map: "PK__GRING__0F8934451531B6C5") @db.VarChar(50)
+  GSTMOBILENO String?  @db.VarChar(12)
+  GSTCITY     String?  @db.VarChar(20)
+  GSTTITLE    String?  @db.VarChar(4)
+  GSTINVITE   Boolean?
+
+  @@schema("ganesha")
+}
+
+model GROOMMST {
+  ROOMNO Int @id(map: "PK__GROOMMST__8CFD89932FE00D49") @db.SmallInt
+
+  @@schema("ganesha")
+}
+
+model MOBILENOMST {
+  PASSPHONE String @id(map: "PK__MOBILENO__4856A39B324C3122") @db.VarChar(12)
+
+  @@schema("ganesha")
+}
+
+model RecognizedFaces {
+  image_name String @db.NVarChar(255)
+  id         Int
+
+  @@id([image_name, id], map: "PK__Recogniz__805457CA25D52326")
+  @@schema("ganesha")
+}
+
+model FaceEncodings {
+  id       Int     @id(map: "PK__FaceEnco__3213E83F4AAC724C")
+  name     String? @db.NVarChar(255)
+  encoding String? @db.NVarChar(Max)
+  FAMILYID String? @db.VarChar(16)
+
+  @@schema("dbo")
+}
