@@ -1,17 +1,24 @@
+"use client";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { ArrowLeftIcon, ArrowRight, X } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
 import { useSwipeable } from "react-swipeable";
+import FullSizeImage from "./FullSizeImage";
+import { useEffect, useState } from "react";
+import { Avatar, Chip } from "@nextui-org/react";
 
 type SharedModalProps = {
   index: number;
-  images?: any[];
+  images: any[];
   currentPhoto?: any;
   changePhotoId: (newVal: number) => void;
   closeModal: () => void;
   navigation: boolean;
   direction?: number;
+};
+
+type Member = {
+  id: number;
+  name: string;
 };
 
 const variants = {
@@ -33,32 +40,17 @@ const variants = {
   },
 };
 
-const range = (start: number, end: number) => {
-  let output = [];
-  if (typeof end === "undefined") {
-    end = start;
-    start = 0;
-  }
-  for (let i = start; i < end; i += 1) {
-    output.push(i);
-  }
-  return output;
-};
-
 export default function SharedModal({
   index,
   images,
   changePhotoId,
   closeModal,
-  navigation,
   currentPhoto,
   direction,
 }: SharedModalProps) {
-  const [loaded, setLoaded] = useState(false);
+  const isMobileScreen = window.innerWidth < 640;
 
-  let filteredImages = images?.filter((img: any) =>
-    range(index - 15, index + 15).includes(img.id)
-  );
+  const [peopleInPhoto, setPeopleInPhoto] = useState<Member[]>([]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -76,6 +68,22 @@ export default function SharedModal({
 
   let currentImage = images ? images[index] : currentPhoto;
 
+  const fetchPeopeleInPhoto = async (imageId: string) => {
+    const response = await fetch(`/api/member?image_name=${imageId}`);
+    const data = await response.json();
+    console.log(data.members);
+    setPeopleInPhoto(data.members);
+  };
+
+  useEffect(() => {
+    setPeopleInPhoto([]);
+    const imageId = images[index]?.IMAGEID;
+
+    if (imageId) {
+      fetchPeopeleInPhoto(imageId);
+    }
+  }, [index]);
+
   return (
     <MotionConfig
       transition={{
@@ -83,13 +91,27 @@ export default function SharedModal({
         opacity: { duration: 0.2 },
       }}
     >
-      <div
-        className="relative z-50 flex aspect-[3/2] w-full max-w-7xl items-center wide:h-full xl:taller-than-854:h-auto"
-        {...handlers}
-      >
-        {/* Main image */}
-        <div className="w-full overflow-hidden">
-          <div className="relative flex aspect-[3/2] items-center justify-center">
+      <div className="flex items-center gap-2 p-3 text-white justify-start mt-5 ml-10">
+        <button
+          onClick={() => closeModal()}
+          className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+      <div className="flex flex-col h-full justify-center items-center">
+        <div className="z-50 flex items-center" {...handlers}>
+          {index > 0 && !isMobileScreen && (
+            <button
+              className="rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white focus:outline-none"
+              style={{ transform: "translate3d(0, 0, 0)" }}
+              onClick={() => changePhotoId(index - 1)}
+            >
+              <ArrowLeftIcon className="h-6 w-6" />
+            </button>
+          )}
+          {/* Main image */}
+          <div className="flex items-center justify-center px-2">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
                 key={index}
@@ -98,125 +120,35 @@ export default function SharedModal({
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className="absolute"
               >
-                {currentImage.toString()}
-                {/* <Image
-                  src={`https://res.cloudinary.com/${
-                    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-                  }/image/upload/c_scale,${navigation ? "w_1280" : "w_1920"}/${
-                    currentImage.public_id
-                  }.${currentImage.format}`}
-                  width={navigation ? 1280 : 1920}
-                  height={navigation ? 853 : 1280}
-                  priority
-                  alt="Next.js Conf image"
-                  onLoad={() => setLoaded(true)}
-                /> */}
+                <FullSizeImage
+                  image_name={currentImage?.IMAGEID}
+                  isMobileScreen={isMobileScreen}
+                />
               </motion.div>
             </AnimatePresence>
           </div>
-        </div>
 
-        {/* Buttons + bottom nav bar */}
-        <div className="absolute inset-0 mx-auto flex max-w-7xl items-center justify-center">
-          {/* Buttons */}
-          {loaded && (
-            <div className="relative aspect-[3/2] max-h-full w-full">
-              {navigation && (
-                <>
-                  {index > 0 && (
-                    <button
-                      className="absolute left-3 top-[calc(50%-16px)] rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white focus:outline-none"
-                      style={{ transform: "translate3d(0, 0, 0)" }}
-                      onClick={() => changePhotoId(index - 1)}
-                    >
-                      <ArrowLeftIcon className="h-6 w-6" />
-                    </button>
-                  )}
-                  {index + 1 < images.length && (
-                    <button
-                      className="absolute right-3 top-[calc(50%-16px)] rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white focus:outline-none"
-                      style={{ transform: "translate3d(0, 0, 0)" }}
-                      onClick={() => changePhotoId(index + 1)}
-                    >
-                      <ArrowRight className="h-6 w-6" />
-                    </button>
-                  )}
-                </>
-              )}
-              <div className="absolute top-0 right-0 flex items-center gap-2 p-3 text-white">
-                {/* <button
-                //   onClick={() =>
-                //     downloadPhoto(
-                //       `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${currentImage.public_id}.${currentImage.format}`,
-                //       `${index}.jpg`
-                //     )
-                //   }
-                  className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
-                  title="Download fullsize version"
-                >
-                  <ArrowDownTrayIcon className="h-5 w-5" />
-                </button> */}
-              </div>
-              <div className="absolute top-0 left-0 flex items-center gap-2 p-3 text-white">
-                <button
-                  onClick={() => closeModal()}
-                  className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
+          {index + 1 < images.length && !isMobileScreen && (
+            <button
+              className=" rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg  hover:bg-black/75 hover:text-white focus:outline-none"
+              onClick={() => changePhotoId(index + 1)}
+            >
+              <ArrowRight className="h-6 w-6" />
+            </button>
           )}
-          {/* Bottom Nav bar */}
-          {navigation && (
-            <div className="fixed inset-x-0 bottom-0 z-40 overflow-hidden bg-gradient-to-b from-black/0 to-black/60">
-              <motion.div
-                initial={false}
-                className="mx-auto mt-6 mb-6 flex aspect-[3/2] h-14"
-              >
-                <AnimatePresence initial={false}>
-                  {filteredImages.map(({ public_id, format, id }) => (
-                    <motion.button
-                      initial={{
-                        width: "0%",
-                        x: `${Math.max((index - 1) * -100, 15 * -100)}%`,
-                      }}
-                      animate={{
-                        scale: id === index ? 1.25 : 1,
-                        width: "100%",
-                        x: `${Math.max(index * -100, 15 * -100)}%`,
-                      }}
-                      exit={{ width: "0%" }}
-                      onClick={() => changePhotoId(id)}
-                      key={id}
-                      className={`${
-                        id === index
-                          ? "z-20 rounded-md shadow shadow-black/50"
-                          : "z-10"
-                      } ${id === 0 ? "rounded-l-md" : ""} ${
-                        id === images.length - 1 ? "rounded-r-md" : ""
-                      } relative inline-block w-full shrink-0 transform-gpu overflow-hidden focus:outline-none`}
-                    >
-                      {/* <Image
-                        alt="small photos on the bottom"
-                        width={180}
-                        height={120}
-                        className={`${
-                          id === index
-                            ? "brightness-110 hover:brightness-110"
-                            : "brightness-50 contrast-125 hover:brightness-75"
-                        } h-full transform object-cover transition`}
-                        src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_180/${public_id}.${format}`}
-                      /> */}
-                      {id}
-                    </motion.button>
-                  ))}
-                </AnimatePresence>
-              </motion.div>
+        </div>
+        <div className="flex flex-row gap-2 flex-wrap p-2 items-center justify-center">
+          {peopleInPhoto.map((person) => (
+            <div className="flex flex-row items-center justify-center space-x-2 border-2 border-green-300 p-[6px] rounded-full">
+              <Avatar
+                size="md"
+                name={person.name}
+                src={"./unknow_faces/" + person.id + ".jpg"}
+              />
+              <p>{person.name}</p>
             </div>
-          )}
+          ))}
         </div>
       </div>
     </MotionConfig>

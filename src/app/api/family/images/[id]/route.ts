@@ -21,10 +21,11 @@ const getSingleFamily = async (id: string, skip: number, take: number) => {
         },
         select: {
             image_name: true,
+            IMAGEID: true,
         },
-        skip: skip,
-        take: take,
+        distinct: ['IMAGEID'],
     });
+
 
 
     return result

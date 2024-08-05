@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     if (image_name) {
         const data = await prisma.recognizedFaces.findMany({
             where: {
-                image_name: image_name
+                IMAGEID: image_name
             }
         })
         const members = await prisma.faceEncodings.findMany({
@@ -24,7 +24,12 @@ export async function GET(request: Request) {
                 id: {
                     in: data.map((d) => d.id)
                 }
-            }
+            },
+            select: {
+                id: true,
+                name: true
+            },
+            distinct: ['id']
         })
 
         return NextResponse.json({ members })

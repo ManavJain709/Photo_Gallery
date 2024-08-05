@@ -35,14 +35,18 @@ export async function POST(req: Request, { params }: {
 // GET /api/member/[id]
 // Get images of a member with id
 export async function GET(req: Request, { params }: {
-    params: { id: string }
+    params: {
+        id: string,
+    }
 }) {
+
     const id = params.id
     const data = await prisma.recognizedFaces.findMany({
         where: {
             id: parseInt(id)
-        }
+        },
     })
+
     if (!data) {
         return Response.json({ message: 'No data found' }, { status: 404 })
     }

@@ -17,6 +17,7 @@ type FamilyContextType = {
   error: any;
   data: FamilyDetails | null;
   fetchMember: (id: number) => Promise<void>;
+  isFamilyMember: (id: number) => boolean;
 };
 
 const FamilyContext = createContext<FamilyContextType>({
@@ -24,6 +25,7 @@ const FamilyContext = createContext<FamilyContextType>({
   error: null,
   data: null,
   fetchMember: async () => {},
+  isFamilyMember: () => false,
 });
 
 export default FamilyContext;

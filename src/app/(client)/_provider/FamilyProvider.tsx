@@ -1,9 +1,5 @@
 "use client";
-import { auth } from "@/lib";
-import { User, signInWithEmailAndPassword } from "firebase/auth";
 import { PropsWithChildren, useEffect, useState } from "react";
-import { AuthContext } from "../_context";
-import { FirebaseError } from "firebase/app";
 import FamilyContext, { FamilyDetails } from "../_context/FamilyContext";
 import useSWR, { Fetcher } from "swr";
 import { useAuth } from "../hooks/useAuth";
@@ -36,6 +32,10 @@ const FamilyProvider = ({ children }: PropsWithChildren) => {
     mutate();
   }, [familyId]);
 
+  const isFamilyMember = (id: number) => {
+    return data?.members.some((member) => member.id === id) ?? false;
+  };
+
   const fetchMember = async (id: number) => {
     const isMemberPartOfFamily = data?.members.find(
       (member) => member.id === id
@@ -58,6 +58,7 @@ const FamilyProvider = ({ children }: PropsWithChildren) => {
         error,
         data: data ?? null,
         fetchMember,
+        isFamilyMember,
       }}
     >
       {children}

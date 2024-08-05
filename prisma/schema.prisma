@@ -141,8 +141,9 @@ model MOBILENOMST {
 }
 
 model RecognizedFaces {
-  image_name String @db.NVarChar(255)
+  image_name String  @db.NVarChar(255)
   id         Int
+  IMAGEID    String? @db.VarChar(64)
 
   @@id([image_name, id], map: "PK__Recogniz__805457CA25D52326")
   @@schema("ganesha")
@@ -155,4 +156,56 @@ model FaceEncodings {
   FAMILYID String? @db.VarChar(16)
 
   @@schema("dbo")
+}
+
+model GIMAGEMST {
+  IMAGE_PATH String  @id(map: "PK__GIMAGEMS__9A17B20EB394E999") @db.NVarChar(255)
+  ID         String? @db.VarChar(64)
+
+  @@schema("ganesha")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model GMANUAL230324 {
+  TYPE           Int     @db.TinyInt
+  SER_NO         Int     @db.TinyInt
+  SUB_SER_NO     Int     @db.TinyInt
+  SUB_SUB_SER_NO Int     @db.TinyInt
+  TOPIC          String? @db.VarChar(255)
+  CONTENT        String? @db.VarChar(Max)
+
+  @@ignore
+  @@schema("ganesha")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model GPASSENGERBAK {
+  SERNO       Int
+  FAMILYID    String   @db.VarChar(16)
+  PASSNAME    String?  @db.VarChar(50)
+  PASSAGE     Int?
+  PASSPHONE   String?  @db.VarChar(12)
+  PASSGEN     Boolean?
+  TRAVEL      String?  @db.VarChar(20)
+  GOVTID      String?  @db.VarChar(50)
+  TICKETCLASS String?  @db.VarChar(10)
+  BOOKEDBY    String?  @db.VarChar(10)
+  PNR         String?  @db.VarChar(10)
+  COACH       String?  @db.VarChar(3)
+  SEATNO      Int?     @db.TinyInt
+  BOOKEDBY2   String?  @db.VarChar(10)
+  PNR2        String?  @db.VarChar(10)
+  COACH2      String?  @db.VarChar(3)
+  SEATNO2     Int?     @db.TinyInt
+
+  @@ignore
+  @@schema("ganesha")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model TEMP {
+  MOBILENO String? @db.VarChar(12)
+
+  @@ignore
+  @@schema("ganesha")
 }
