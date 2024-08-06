@@ -1,9 +1,9 @@
 "use client";
 import { PropsWithChildren } from "react";
 import { RedirectType, redirect, usePathname } from "next/navigation";
-import { useAuth } from "../hooks/useAuth";
-import FamilyTabs from "./(users)/family/_components/FamilyTab";
-import { FamilyProvider } from "../_provider";
+import { useAuth } from "../../../hooks/useAuth";
+import FamilyTabs from "./_components/FamilyTab";
+import { FamilyProvider } from "../../../_provider";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const { isSignedIn, pending } = useAuth();

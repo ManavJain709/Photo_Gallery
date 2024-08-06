@@ -18,7 +18,7 @@ const FamilyList = ({ families }: { families: FamilyDetails[] }) => {
           <CardBody>
             <Image
               alt={family.result?.[0]?.image_name ?? family.family}
-              src={family.result?.[0]?.image_name}
+              src={`${process.env.NEXT_PUBLIC_CLOUDFLARE_URL}${family.result?.[1]?.IMAGEID}/thumbnail`}
               width={150}
               loading="lazy"
             />

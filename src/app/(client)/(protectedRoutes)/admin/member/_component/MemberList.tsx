@@ -143,7 +143,7 @@ export default function MemberList({ families }: { families: Family[] }) {
             <CardHeader>
               <Image
                 alt={member.id.toString()}
-                src={"./unknow_faces/" + member.id + ".jpg"}
+                src={"http://localhost:3000/unknow_faces/" + member.id + ".jpg"}
                 width={150}
                 loading="lazy"
               />

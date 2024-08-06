@@ -9,9 +9,6 @@ import {
   Input,
 } from "@nextui-org/react";
 import React, { useState } from "react";
-
-import { RecaptchaVerifier } from "firebase/auth";
-import { auth } from "@/lib";
 import { useAuth } from "../hooks/useAuth";
 
 const PhoneAuth = () => {
@@ -38,7 +35,6 @@ const PhoneAuth = () => {
         <Divider />
         <CardBody className="flex flex-col gap-4 w-full p-4">
           <Input
-            type="tel"
             variant="bordered"
             label="Email"
             value={email}

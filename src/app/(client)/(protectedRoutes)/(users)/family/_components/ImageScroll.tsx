@@ -20,7 +20,7 @@ const fetcher: Fetcher<FamilyImages> = (url: string) =>
 export default function FamilyImages() {
   const [lastViewedPhoto, setLastViewedPhoto] = useState<string | null>();
 
-  const [photoId, setPhotoId] = useState<number | null>();
+  const [photoId, setPhotoId] = useState<number | null>(null);
 
   const lastViewedPhotoRef = useRef<HTMLAnchorElement>(null);
 
@@ -52,7 +52,7 @@ export default function FamilyImages() {
 
   return (
     <div className="flex flex-row space-x-1 space-y-2 flex-wrap justify-between">
-      {photoId && (
+      {photoId !== null && (
         <ImageModal
           images={data ?? []}
           photoId={photoId}
@@ -77,6 +77,7 @@ export default function FamilyImages() {
           onClick={() => {
             setPhotoId(index);
           }}
+          className="cursor-pointer"
         >
           <DownloadAbleImage image_name={image.IMAGEID} />
         </div>

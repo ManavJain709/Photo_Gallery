@@ -7,6 +7,7 @@ export type FamilyDetails = {
     family: string;
     result: {
         image_name: string;
+        IMAGEID: string;
     }[];
     members: {
         id: number;
@@ -31,11 +32,11 @@ const getSingleFamily = async (id: string) => {
 
     // Execute a raw SQL query
     const result = await prisma.$queryRaw`
-        SELECT rf.image_name
+        SELECT rf.IMAGEID
         FROM ganesha.RecognizedFaces rf
         JOIN dbo.FaceEncodings fe ON rf.id = fe.id
         WHERE fe.id IN (${idsString})
-        GROUP BY rf.image_name
+        GROUP BY rf.IMAGEID
         HAVING COUNT(DISTINCT fe.id) = ${ids.length}
     `;
 

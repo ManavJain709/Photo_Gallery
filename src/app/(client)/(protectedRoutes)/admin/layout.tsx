@@ -21,7 +21,9 @@ const Layout = ({ children }: PropsWithChildren) => {
     return redirect("/login", RedirectType.replace);
   }
 
-  // if (!admins.includes(user?.email ?? "")) return redirect("_not-found");
+  if (!admins.includes(user?.email ?? "")) {
+    return redirect("/family", RedirectType.replace);
+  }
 
   return (
     <>

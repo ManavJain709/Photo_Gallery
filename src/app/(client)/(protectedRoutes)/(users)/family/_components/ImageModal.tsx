@@ -35,7 +35,6 @@ export default function ImageModal({
       setDirection(-1);
     }
     setCurIndex(newVal);
-    window.history.pushState({}, "", `/family?photoId=${newVal}`);
   }
 
   useKeypress("ArrowRight", () => {
