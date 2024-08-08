@@ -8,7 +8,7 @@ export type Family = {
 // GET /api/family
 // Get all families
 export async function GET() {
-    const family = await prisma.aFAMILY.findMany()
+    const family = await prisma.gFAMILY.findMany()
 
     const familyObj = family.map((f) => ({
         id: f.FAMILYID,

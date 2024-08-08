@@ -46,7 +46,7 @@ export async function GET(
     const take = searchParams.get('take') ?? '10';
     const id = params.id;
 
-    const family = await prisma.aFAMILY.findUnique({
+    const family = await prisma.gFAMILY.findUnique({
         where: {
             FAMILYID: id,
         },

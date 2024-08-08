@@ -60,7 +60,7 @@ export async function GET(
     const id = params.id;
 
     if (id === "all") {
-        const families = await prisma.aFAMILY.findMany();
+        const families = await prisma.gFAMILY.findMany();
 
         let allFamily = [];
 
@@ -74,7 +74,7 @@ export async function GET(
         return Response.json(allFamily);
     }
 
-    const family = await prisma.aFAMILY.findUnique({
+    const family = await prisma.gFAMILY.findUnique({
         where: {
             FAMILYID: id,
         },

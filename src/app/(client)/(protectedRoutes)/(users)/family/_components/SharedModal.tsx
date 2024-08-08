@@ -128,7 +128,9 @@ export default function SharedModal({
                 <Avatar
                   size="md"
                   name={person.name}
-                  src={"./unknow_faces/" + person.id + ".jpg"}
+                  src={
+                    "http://localhost:3000/unknow_faces/" + person.id + ".jpg"
+                  }
                 />
                 <p>{person.name}</p>
               </div>

@@ -77,7 +77,11 @@ export default function MemberList({ families }: { families: Family[] }) {
               <ModalHeader className="flex flex-col gap-1">
                 <Image
                   alt={selectedMember?.id.toString()}
-                  src={"./unknow_faces/" + selectedMember?.id + ".jpg"}
+                  src={
+                    "http://localhost:3000/unknow_faces/" +
+                    selectedMember?.id +
+                    ".jpg"
+                  }
                   width={150}
                   loading="lazy"
                 />
